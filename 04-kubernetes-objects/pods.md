@@ -1,0 +1,89 @@
+A **Pod** is the **smallest deployable unit in Kubernetes** that runs one or more containers together.
+A Pod is **NOT just a container**.
+
+**It is a wrapper that provides:**
+- 🌐 **Shared Network (same IP)**
+- 💾 **Shared Storage (volumes)**
+- 🔄 **Lifecycle management**
+
+## What's Inside a pods?
+### 1. Containers
+- Usually 1 container (common case)
+- Can have multiple containers (sidecar pattern)
+```php
+containers:
+- name: app
+  image: myapp
+- name: sidecar
+  image: logging-agent
+```
+
+## 2. Networking (Critical Concept)
+
+ Every Pod gets:
+- **1 unique IP address**
+- Containers inside share:
+    - `localhost`
+    - ports
+
+ Example:
+- App container runs on `localhost:8080`
+- Sidecar can access it via `localhost:8080`
+
+## 3. Volumes (Storage Sharing)
+
+Pods allow containers to share data:
+```php
+volumes:
+- name: shared-data
+  emptyDir: {}
+```
+
+Used for:
+- Logs
+- Cache
+- Data exchange between containers
+
+# 🔄 Pod Lifecycle
+
+## Phases:
+
+1. **Pending**
+    - Pod created but not scheduled
+2. **Running**
+    - Containers are running
+3. **Succeeded**
+    - Completed successfully
+4. **Failed**
+    - Something went wrong
+5. **Unknown**
+    - Node issue
+
+**Example: Basic Pod**
+```php
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+```
+
+**Example: Multi-Container Pod**
+```php
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-container
+spec:
+  containers:
+  - name: app
+    image: myapp
+  - name: logger
+    image: busybox
+    args: ["sh", "-c", "tail -f /var/log/app.log"]
+```

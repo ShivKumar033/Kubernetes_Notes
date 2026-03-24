@@ -1,0 +1,87 @@
+A **ReplicaSet** ensures that a **specified number of identical Pods are always running**.
+
+-  If a Pod crashes → ReplicaSet creates a new one automatically.
+### Key Points
+- Self-healing: recreates pods if they crash
+- Uses **label selectors**
+- Usually managed by Deployments
+
+# Core Idea
+ReplicaSet = **Desired State Manager**
+
+You define:
+```php
+replicas: 3
+```
+
+Kubernetes ensures:
+- Always **3 Pods running**
+- No more, no less
+# How ReplicaSet Works Internally
+##  1. Desired vs Current State
+
+- Desired: 3 pods
+- Current: 2 pods
+Action → Create 1 more pod
+
+## 2. Label Selector (Very Important)
+
+ReplicaSet uses labels to **identify which Pods it owns**
+```php
+selector:
+  matchLabels:
+    app: nginx
+```
+
+Pods must match:
+```php
+labels:
+  app: nginx
+```
+If labels match → ReplicaSet manages the pod
+
+# Example: ReplicaSet YAML
+```php
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+```
+
+# What Happens in Real Scenarios
+
+### Case 1: Pod Crash
+```php
+kubectl delete pod nginx-rs-abc
+```
+
+ReplicaSet:
+- Detects missing pod
+- Creates new pod automatically ✅
+
+### Case 2: Scaling
+```php
+kubectl scale rs nginx-rs --replicas=5
+```
+Result:
+- 2 new pods created
+
+### Case 3: Reduce Scale
+```php
+kubectl scale rs nginx-rs --replicas=2
+```
+Result:
+- Extra pods deleted
