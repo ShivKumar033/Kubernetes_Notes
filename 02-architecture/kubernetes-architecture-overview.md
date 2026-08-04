@@ -1,5 +1,4 @@
-![[kubernetes-cluster-architecture 1.svg]]
-
+![[kubernetes-cluster-architecture.svg]]
 Kubernetes follows a **master–worker architecture** (now commonly called **Control Plane and Worker Nodes**).
 
 A Kubernetes cluster contains:

@@ -17,10 +17,10 @@ This repository contains my learning notes for Kubernetes.
 - kubectl
 - Minikube
 - Kind
-- Kubeadm
+- kubeadm
 - Helm
 
-
+```
 kubernetes-notes/
 │
 ├── README.md
@@ -101,3 +101,4 @@ kubernetes-notes/
     ├── architecture-diagrams
     ├── images
     └── yaml-examples
+```
